@@ -14,6 +14,7 @@ import java.util.List;
 
 public class MealServlet extends HttpServlet {
     private static final int MAX_CALORIES = 2000;
+
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         List<Meal> meals = MealsUtil.getMeals();

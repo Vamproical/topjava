@@ -2,7 +2,7 @@
 <%@page contentType="text/html" pageEncoding="UTF-8" %>
 <%@taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
-<html lang="ru">
+<html lang="en">
 <head>
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
     <link rel="stylesheet" href="styles.css" type="text/css"/>
@@ -22,8 +22,8 @@
     </thead>
     <tbody>
     <c:forEach var="meal" items="${meals}">
-            <fmt:parseDate type="both" value="${meal.dateTime}" var="parsedDateTime" pattern="yyyy-MM-dd'T'HH:mm"/>
-            <fmt:formatDate pattern="dd-MM-yyyy HH:mm" value="${parsedDateTime}" var="date"/>
+        <fmt:parseDate type="both" value="${meal.dateTime}" var="parsedDateTime" pattern="yyyy-MM-dd'T'HH:mm"/>
+        <fmt:formatDate pattern="dd-MM-yyyy HH:mm" value="${parsedDateTime}" var="date"/>
         <tr class="${meal.excess ? 'excess' : 'not-excess'}">
             <td>${date}</td>
             <td>${meal.description}</td>
