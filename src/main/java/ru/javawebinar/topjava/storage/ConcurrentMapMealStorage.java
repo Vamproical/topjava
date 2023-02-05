@@ -8,13 +8,19 @@ import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
-public class ConcurrentMapStorage implements Storage {
+public class ConcurrentMapMealStorage implements Storage {
     private final Map<Integer, Meal> storage = new ConcurrentHashMap<>();
     private int count;
 
-    public ConcurrentMapStorage() {
+    public ConcurrentMapMealStorage() {
         fillMap();
         count = size();
+    }
+
+    @Override
+    public synchronized Meal save(Meal meal) {
+        meal.setId(++count);
+        return storage.put(count, meal);
     }
 
     @Override
@@ -23,9 +29,8 @@ public class ConcurrentMapStorage implements Storage {
     }
 
     @Override
-    public synchronized Meal save(Meal meal) {
-        meal.setId(++count);
-        return storage.put(count, meal);
+    public Meal get(int id) {
+        return storage.get(id);
     }
 
     @Override

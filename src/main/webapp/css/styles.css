@@ -1,13 +1,5 @@
-tr.excess {
-    color: red;
-}
-
-tr.not-excess {
-    color: green;
-}
-
 table, th, td {
-    border: 3px solid;
+    border: 3px solid black;
     border-collapse: collapse;
     table-layout: fixed;
 }
