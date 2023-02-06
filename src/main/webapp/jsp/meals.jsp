@@ -12,7 +12,7 @@
 <h3><a href="index.html">Home</a></h3>
 <hr>
 <h2>Meals</h2>
-<p><a href="meals?action=add">Add User</a></p>
+<p><a href="meals?action=add">Add Meal</a></p>
 <table>
     <thead>
     <tr>
@@ -26,7 +26,7 @@
     <c:forEach var="meal" items="${meals}">
         <jsp:useBean id="meal" type="ru.javawebinar.topjava.model.MealTo"/>
         <fmt:parseDate type="both" value="${meal.dateTime}" var="parsedDateTime" pattern="yyyy-MM-dd'T'HH:mm"/>
-        <fmt:formatDate pattern="dd-MM-yyyy HH:mm" value="${parsedDateTime}" var="date"/>
+        <fmt:formatDate pattern="yyyy-MM-dd HH:mm" value="${parsedDateTime}" var="date"/>
         <tr style="color: ${meal.excess ? 'red' : 'green'}">
             <td>${date}</td>
             <td>${meal.description}</td>

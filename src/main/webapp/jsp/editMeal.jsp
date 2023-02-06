@@ -8,13 +8,16 @@
     <title>Meals</title>
 </head>
 <body>
+<jsp:useBean id="meal" type="ru.javawebinar.topjava.model.Meal" scope="request"/>
 <h3><a href="index.html">Home</a></h3>
 <hr>
-<h2>Edit meal</h2>
+<h3>${meal.id gt 0 ? "Edit meal" : "Add meal"}</h3>
 <form method="post" action="meals" enctype="application/x-www-form-urlencoded">
     <input type="hidden" name="id" value="${meal.id}"/>
     <label for="dateTime">DateTime:</label>
-    <input id="dateTime" type="datetime-local" name="dateTime" value="${meal.dateTime}" required/><br/>
+    <fmt:parseDate type="both" value="${meal.dateTime}" var="parsedDateTime" pattern="yyyy-MM-dd'T'HH:mm"/>
+    <fmt:formatDate pattern="yyyy-MM-dd HH:mm" value="${parsedDateTime}" var="date"/>
+    <input id="dateTime" type="datetime-local" name="dateTime" value="${date}"/><br/>
     <label for="description">Description:</label>
     <input id="description" type="text" name="description" value="${meal.description}" required/><br/>
     <label for="calories">Calories</label>

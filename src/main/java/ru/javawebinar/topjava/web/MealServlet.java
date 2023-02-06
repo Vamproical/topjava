@@ -3,8 +3,8 @@ package ru.javawebinar.topjava.web;
 import org.slf4j.Logger;
 import ru.javawebinar.topjava.model.Meal;
 import ru.javawebinar.topjava.model.MealTo;
-import ru.javawebinar.topjava.storage.ConcurrentMapMealStorage;
-import ru.javawebinar.topjava.storage.Storage;
+import ru.javawebinar.topjava.storage.InMemoryMealStorage;
+import ru.javawebinar.topjava.storage.MealStorage;
 import ru.javawebinar.topjava.util.MealsUtil;
 
 import javax.servlet.ServletConfig;
@@ -22,14 +22,14 @@ import static org.slf4j.LoggerFactory.getLogger;
 public class MealServlet extends HttpServlet {
     private static final Logger log = getLogger(MealServlet.class);
     private static final int MAX_CALORIES = 2000;
-    private static final String ADD_OR_EDIT = "/WEB-INF/jsp/edit.jsp";
-    private static final String LIST_USER = "/WEB-INF/jsp/meals.jsp";
-    private Storage storage;
+    private static final String ADD_OR_EDIT = "jsp/editMeal.jsp";
+    private static final String LIST_USER = "jsp/meals.jsp";
+    private MealStorage mealStorage;
 
     @Override
     public void init(ServletConfig config) throws ServletException {
         super.init(config);
-        storage = new ConcurrentMapMealStorage();
+        mealStorage = new InMemoryMealStorage();
     }
 
     @Override
@@ -50,7 +50,7 @@ public class MealServlet extends HttpServlet {
                 executeEdit(request, response);
                 break;
             default:
-                List<MealTo> mealTos = MealsUtil.filteredByStreams(storage.getAll(), LocalTime.MIN, LocalTime.MAX, MAX_CALORIES);
+                List<MealTo> mealTos = MealsUtil.filteredByStreams(mealStorage.getAll(), LocalTime.MIN, LocalTime.MAX, MAX_CALORIES);
                 request.setAttribute("meals", mealTos);
                 request.getRequestDispatcher(LIST_USER).forward(request, response);
         }
@@ -67,11 +67,11 @@ public class MealServlet extends HttpServlet {
         String id = request.getParameter("id");
         if (id == null || id.isEmpty()) {
             log.debug("adding new meal {}", meal);
-            storage.save(meal);
+            mealStorage.create(meal);
         } else {
             log.debug("updating meal {}", meal);
             meal.setId(Integer.parseInt(id));
-            storage.update(meal);
+            mealStorage.update(meal);
         }
 
         response.sendRedirect("meals");
@@ -80,19 +80,21 @@ public class MealServlet extends HttpServlet {
     private void executeDelete(HttpServletRequest request, HttpServletResponse response) throws IOException {
         log.debug("delete meal");
         int id = Integer.parseInt(request.getParameter("id"));
-        storage.delete(id);
+        mealStorage.delete(id);
         response.sendRedirect("meals");
     }
 
     private void executeAdd(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException {
         log.debug("add new meal");
+        Meal meal = new Meal(LocalDateTime.now(), "", 0);
+        request.setAttribute("meal", meal);
         request.getRequestDispatcher(ADD_OR_EDIT).forward(request, response);
     }
 
     private void executeEdit(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException {
         log.debug("update meal");
         int id = Integer.parseInt(request.getParameter("id"));
-        request.setAttribute("meal", storage.get(id));
+        request.setAttribute("meal", mealStorage.get(id));
         request.getRequestDispatcher(ADD_OR_EDIT).forward(request, response);
     }
 }
