@@ -11,7 +11,7 @@ import java.util.concurrent.atomic.AtomicInteger;
 
 public class InMemoryMealStorage implements MealStorage {
     private final Map<Integer, Meal> storage = new ConcurrentHashMap<>();
-    private final AtomicInteger count = new AtomicInteger();
+    private final AtomicInteger counter = new AtomicInteger();
 
     public InMemoryMealStorage() {
         fillStorage();
@@ -22,16 +22,20 @@ public class InMemoryMealStorage implements MealStorage {
     }
 
     @Override
-    public Meal create(Meal meal) {
-        meal.setId(count.incrementAndGet());
-        storage.put(count.get(), meal);
+    public synchronized Meal create(Meal meal) {
+        meal.setId(counter.incrementAndGet());
+        storage.put(counter.get(), meal);
         return meal;
     }
 
     @Override
     public Meal update(Meal meal) {
-        storage.replace(meal.getId(), meal);
-        return meal;
+        if (storage.containsKey(meal.getId())) {
+            storage.put(meal.getId(), meal);
+            return meal;
+        } else {
+            return null;
+        }
     }
 
     @Override

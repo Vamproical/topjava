@@ -11,7 +11,7 @@
 <jsp:useBean id="meal" type="ru.javawebinar.topjava.model.Meal" scope="request"/>
 <h3><a href="index.html">Home</a></h3>
 <hr>
-<h3>${meal.id gt 0 ? "Edit meal" : "Add meal"}</h3>
+<h3>${meal.id == null ? "Add meal" : "Edit meal"}</h3>
 <form method="post" action="meals" enctype="application/x-www-form-urlencoded">
     <input type="hidden" name="id" value="${meal.id}"/>
     <label for="dateTime">DateTime:</label>
