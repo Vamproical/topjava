@@ -22,20 +22,15 @@ public class InMemoryMealStorage implements MealStorage {
     }
 
     @Override
-    public synchronized Meal create(Meal meal) {
+    public Meal create(Meal meal) {
         meal.setId(counter.incrementAndGet());
-        storage.put(counter.get(), meal);
+        storage.put(meal.getId(), meal);
         return meal;
     }
 
     @Override
     public Meal update(Meal meal) {
-        if (storage.containsKey(meal.getId())) {
-            storage.put(meal.getId(), meal);
-            return meal;
-        } else {
-            return null;
-        }
+        return storage.replace(meal.getId(), meal) != null ? meal : null;
     }
 
     @Override
