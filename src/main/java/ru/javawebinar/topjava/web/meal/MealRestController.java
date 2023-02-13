@@ -6,12 +6,10 @@ import org.springframework.stereotype.Controller;
 import ru.javawebinar.topjava.model.Meal;
 import ru.javawebinar.topjava.service.MealService;
 import ru.javawebinar.topjava.to.MealTo;
-import ru.javawebinar.topjava.util.DateTimeUtil;
 import ru.javawebinar.topjava.util.MealsUtil;
 import ru.javawebinar.topjava.web.SecurityUtil;
 
 import java.time.LocalDate;
-import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.util.List;
 
@@ -21,7 +19,7 @@ import static ru.javawebinar.topjava.web.SecurityUtil.authUserId;
 
 @Controller
 public class MealRestController {
-    protected final Logger log = LoggerFactory.getLogger(getClass());
+    private final Logger log = LoggerFactory.getLogger(getClass());
     private final MealService service;
 
     public MealRestController(MealService mealService) {
@@ -53,22 +51,18 @@ public class MealRestController {
 
     public List<MealTo> getAll() {
         log.info("getAll");
-        return MealsUtil.getTos(service.getAll(authUserId(), meal -> true), SecurityUtil.authUserCaloriesPerDay());
+        return MealsUtil.getTos(service.getAll(authUserId()), SecurityUtil.authUserCaloriesPerDay());
     }
 
     public List<MealTo> getAllFiltered(LocalDate startDate, LocalDate endDate, LocalTime startTime, LocalTime endTime) {
         log.info("getAllFiltered with start date {}, end date {}, start time {}, end time {}",
                 startDate, endDate, startTime, endTime);
 
-        LocalDate filterStartDate = startDate == null ? LocalDate.MIN : startDate;
-        LocalDate filterEndDate = endDate == null ? LocalDate.MAX : endDate;
-        LocalTime filterStartTime = startTime == null ? LocalTime.MIN : startTime;
-        LocalTime filterEndTime = endTime == null ? LocalTime.MAX : endTime;
+        LocalTime filterStartTime = startTime != null ? startTime : LocalTime.MIN;
+        LocalTime filterEndTime = endTime != null ? endTime : LocalTime.MAX;
 
-        LocalDateTime startDateTime = LocalDateTime.of(filterStartDate, filterStartTime);
-        LocalDateTime endDateTime = LocalDateTime.of(filterEndDate, filterEndTime);
-        return MealsUtil.getTos(service.getAll(authUserId(),
-                        meal -> DateTimeUtil.isBetweenHalfOpen(meal.getDateTime(), startDateTime, endDateTime)),
-                SecurityUtil.authUserCaloriesPerDay());
+        return MealsUtil.getFilteredTos(service.getAllFiltered(startDate, endDate, authUserId()),
+                SecurityUtil.authUserCaloriesPerDay(),
+                filterStartTime, filterEndTime);
     }
 }

@@ -4,9 +4,11 @@ import org.springframework.stereotype.Service;
 import ru.javawebinar.topjava.model.Meal;
 import ru.javawebinar.topjava.repository.MealRepository;
 
+import java.time.LocalDate;
 import java.util.List;
-import java.util.function.Predicate;
 
+import static ru.javawebinar.topjava.util.DateTimeUtil.getEndDayOrMaxDay;
+import static ru.javawebinar.topjava.util.DateTimeUtil.getStartDayOrMinDay;
 import static ru.javawebinar.topjava.util.ValidationUtil.checkNotFoundWithId;
 
 @Service
@@ -30,8 +32,12 @@ public class MealService {
         return checkNotFoundWithId(repository.get(id, userId), id);
     }
 
-    public List<Meal> getAll(int userId, Predicate<Meal> filter) {
-        return repository.getAll(userId, filter);
+    public List<Meal> getAll(int userId) {
+        return repository.getAll(userId);
+    }
+
+    public List<Meal> getAllFiltered(LocalDate startDate, LocalDate endDate, int userId) {
+        return repository.getAllFiltered(getStartDayOrMinDay(startDate), getEndDayOrMaxDay(endDate), userId);
     }
 
     public void update(Meal meal, int userId) {

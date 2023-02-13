@@ -16,12 +16,20 @@ public class DateTimeUtil {
         return value.compareTo(start) >= 0 && value.compareTo(end) < 0;
     }
 
+    public static LocalDateTime getStartDayOrMinDay(LocalDate date) {
+        return date != null ? LocalDateTime.of(date, LocalTime.MIN) : LocalDateTime.MIN;
+    }
+
+    public static LocalDateTime getEndDayOrMaxDay(LocalDate date) {
+        return date != null ? LocalDateTime.of(date, LocalTime.MAX) : LocalDateTime.MAX;
+    }
+
     public static LocalDate parseLocalDate(String date) {
-        return date.length() != 0 ? LocalDate.parse(date) : null;
+        return date.isEmpty() ? null : LocalDate.parse(date) ;
     }
 
     public static LocalTime parseLocalTime(String time) {
-        return time.length() != 0 ? LocalTime.parse(time) : null;
+        return time.isEmpty() ? null : LocalTime.parse(time);
     }
 
     public static String toString(LocalDateTime ldt) {
