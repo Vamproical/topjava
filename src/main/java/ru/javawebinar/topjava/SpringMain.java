@@ -32,7 +32,6 @@ public class SpringMain {
                     LocalTime.of(5, 0, 0),
                     LocalTime.of(14, 0, 0)));
             Meal updatedMeal = new Meal(2, LocalDateTime.now(), "SomeText", 100);
-            updatedMeal.setUserId(1);
             mealRestController.update(updatedMeal, 2);
             //mealRestController.update(mealRestController.get(1), 2);
             mealRestController.delete(2);
