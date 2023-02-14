@@ -16,6 +16,10 @@ public class DateTimeUtil {
         return value.compareTo(start) >= 0 && value.compareTo(end) < 0;
     }
 
+    public static <T extends Comparable<T>> boolean isBetweenInclusive(T value, T start, T end) {
+        return value.compareTo(start) >= 0 && value.compareTo(end) <= 0;
+    }
+
     public static LocalDateTime getStartDayOrMinDay(LocalDate date) {
         return date != null ? LocalDateTime.of(date, LocalTime.MIN) : LocalDateTime.MIN;
     }
