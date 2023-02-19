@@ -85,6 +85,12 @@ public class MealServiceTest {
     }
 
     @Test
+    public void getBetweenInclusiveWithNull() {
+        List<Meal> userMeals = service.getBetweenInclusive(null, null, USER_ID);
+        MATCHER.assertMatch(userMeals, meal7, meal6, meal5, meal4, meal3, meal2, meal1);
+    }
+
+    @Test
     public void getAll() {
         List<Meal> userMeals = service.getAll(USER_ID);
         MATCHER.assertMatch(userMeals, meal7, meal6, meal5, meal4, meal3, meal2, meal1);
