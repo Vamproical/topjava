@@ -14,8 +14,6 @@ import ru.javawebinar.topjava.model.Meal;
 import ru.javawebinar.topjava.util.exception.NotFoundException;
 
 import java.time.LocalDate;
-import java.time.LocalDateTime;
-import java.time.Month;
 import java.util.List;
 
 import static org.junit.Assert.assertThrows;
@@ -40,14 +38,23 @@ public class MealServiceTest {
 
     @Test
     public void get() {
-        int mealId = meal1.getId();
-        Meal meal = service.get(mealId, USER_ID);
+        Meal meal = service.get(MEAL_ID, USER_ID);
         MATCHER.assertMatch(meal, meal1);
     }
 
     @Test
-    public void getNotFound() {
+    public void getNotFoundByUser() {
         assertThrows(NotFoundException.class, () -> service.get(MEAL_ID, NOT_FOUND));
+    }
+
+    @Test
+    public void getNotFoundByMeal() {
+        assertThrows(NotFoundException.class, () -> service.get(MEAL_NOT_FOUND_ID, USER_ID));
+    }
+
+    @Test
+    public void getNotFoundByAnotherUser() {
+        assertThrows(NotFoundException.class, () -> service.get(ADMIN_MEAL_ID, USER_ID));
     }
 
     @Test
@@ -57,8 +64,18 @@ public class MealServiceTest {
     }
 
     @Test
-    public void deleteNotFound() {
+    public void deleteNotFoundByUser() {
         assertThrows(NotFoundException.class, () -> service.delete(MEAL_ID, NOT_FOUND));
+    }
+
+    @Test
+    public void deleteNotFoundByMeal() {
+        assertThrows(NotFoundException.class, () -> service.delete(MEAL_NOT_FOUND_ID, USER_ID));
+    }
+
+    @Test
+    public void deleteNotFoundByAnotherUser() {
+        assertThrows(NotFoundException.class, () -> service.delete(ADMIN_MEAL_ID, USER_ID));
     }
 
     @Test
@@ -87,6 +104,12 @@ public class MealServiceTest {
     }
 
     @Test
+    public void updateNotFoundByAnotherUser() {
+        Meal updated = MealTestData.getUpdated();
+        assertThrows(NotFoundException.class, () -> service.update(updated, ADMIN_MEAL_ID));
+    }
+
+    @Test
     public void create() {
         Meal created = service.create(MealTestData.getNew(), USER_ID);
         Integer newId = created.getId();
@@ -99,7 +122,7 @@ public class MealServiceTest {
     @Test
     public void duplicateDateTimeCreate() {
         assertThrows(DataAccessException.class, () ->
-                service.create(new Meal(null, LocalDateTime.of(2020, Month.JANUARY, 30, 10, 0),
+                service.create(new Meal(null, meal1.getDateTime(),
                         "throw description", 1000), USER_ID));
     }
 }

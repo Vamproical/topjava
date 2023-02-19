@@ -4,15 +4,15 @@ import java.util.Arrays;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-public class TestUtil<T> {
+public class Matcher<T> {
     private final String[] fieldsToIgnore;
 
-    private TestUtil(String[] fieldsToIgnore) {
+    private Matcher(String[] fieldsToIgnore) {
         this.fieldsToIgnore = fieldsToIgnore;
     }
 
-    public static <T> TestUtil<T> newInstance(String... fieldsToIgnore) {
-        return new TestUtil<>(fieldsToIgnore);
+    public static <T> Matcher<T> newInstance(String... fieldsToIgnore) {
+        return new Matcher<>(fieldsToIgnore);
     }
 
     public void assertMatch(T actual, T expected) {
