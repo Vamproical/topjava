@@ -5,13 +5,12 @@ import org.hibernate.validator.constraints.Range;
 import javax.persistence.*;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Size;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
 
-
 @NamedQuery(name = Meal.DELETE, query = "DELETE FROM Meal m WHERE m.id=:id AND m.user.id=:user_id")
-@NamedQuery(name = Meal.GET, query = "SELECT m FROM Meal m WHERE m.id=:id AND m.user.id=:user_id")
 @NamedQuery(name = Meal.ALL_SORTED, query = "SELECT m FROM Meal m WHERE m.user.id=:user_id ORDER BY m.dateTime DESC")
 @NamedQuery(name = Meal.ALL_SORTED_BETWEEN_HALF_OPEN, query = "SELECT m FROM Meal m " +
         "WHERE m.dateTime >= :start_date_time AND m.dateTime < :end_date_time AND  m.user.id=:user_id " +
@@ -20,7 +19,6 @@ import java.time.LocalTime;
 @Table(name = "meal", uniqueConstraints = {@UniqueConstraint(columnNames = {"user_id", "date_time"}, name = "meals_unique_user_datetime_idx")})
 public class Meal extends AbstractBaseEntity {
     public static final String DELETE = "Meal.delete";
-    public static final String GET = "Meal.get";
     public static final String ALL_SORTED = "Meal.getAllSorted";
     public static final String ALL_SORTED_BETWEEN_HALF_OPEN = "Meal.getAllSortedBetweenHalfOpen";
     @NotNull
@@ -28,11 +26,12 @@ public class Meal extends AbstractBaseEntity {
     private LocalDateTime dateTime;
 
     @NotBlank
+    @Size(min = 2, max = 120)
     @Column(name = "description", nullable = false)
     private String description;
 
+    @Range(min = 5, max = 5000)
     @Column(name = "calories", nullable = false)
-    @Range(max = 5000)
     private int calories;
 
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
