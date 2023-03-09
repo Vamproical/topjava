@@ -21,13 +21,6 @@ import static ru.javawebinar.topjava.UserTestData.USER_ID;
 public abstract class MealServiceTest extends ServiceTest {
     @Autowired
     protected MealService service;
-    @Autowired
-    private CacheManager cacheManager;
-
-    @Before
-    public void setup() {
-        cacheManager.getCache("meals").clear();
-    }
 
     @Test
     public void delete() {
