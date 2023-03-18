@@ -6,9 +6,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
-import ru.javawebinar.topjava.service.MealService;
 import ru.javawebinar.topjava.service.UserService;
-import ru.javawebinar.topjava.util.MealsUtil;
 
 import javax.servlet.http.HttpServletRequest;
 
@@ -17,11 +15,9 @@ public class RootController {
     private static final Logger log = LoggerFactory.getLogger(RootController.class);
 
     private final UserService userService;
-    private final MealService mealService;
 
-    public RootController(UserService userService, MealService mealService) {
+    public RootController(UserService userService) {
         this.userService = userService;
-        this.mealService = mealService;
     }
 
     @GetMapping("/")

@@ -56,6 +56,16 @@ public abstract class AbstractUserServiceTest extends AbstractServiceTest {
     }
 
     @Test
+    public void createWithTwoRoles() {
+        User created = service.create(getNewTwoRoles());
+        int newId = created.id();
+        User newUser = getNewTwoRoles();
+        newUser.setId(newId);
+        USER_MATCHER.assertMatch(created, newUser);
+        USER_MATCHER.assertMatch(service.get(newId), newUser);
+    }
+
+    @Test
     public void duplicateMailCreate() {
         assertThrows(DataAccessException.class, () ->
                 service.create(new User(null, "Duplicate", "user@yandex.ru", "newPass", Role.USER)));
@@ -94,6 +104,13 @@ public abstract class AbstractUserServiceTest extends AbstractServiceTest {
         User updated = getUpdated();
         service.update(updated);
         USER_MATCHER.assertMatch(service.get(USER_ID), getUpdated());
+    }
+
+    @Test
+    public void updateTwoRoles() {
+        User updated = getUpdatedTwoRoles();
+        service.update(updated);
+        USER_MATCHER.assertMatch(service.get(USER_ID), getUpdatedTwoRoles());
     }
 
     @Test

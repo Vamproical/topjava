@@ -5,6 +5,7 @@ import ru.javawebinar.topjava.model.User;
 
 import java.util.Collections;
 import java.util.Date;
+import java.util.Set;
 
 import static ru.javawebinar.topjava.model.AbstractBaseEntity.START_SEQ;
 
@@ -24,6 +25,11 @@ public class UserTestData {
         return new User(null, "New", "new@gmail.com", "newPass", 1555, false, new Date(), Collections.singleton(Role.USER));
     }
 
+    public static User getNewTwoRoles() {
+        return new User(null, "NewTwo", "newtwo@gmail.com", "newPass", 1555, false, new Date(),
+                Set.of(Role.USER, Role.ADMIN));
+    }
+
     public static User getUpdated() {
         User updated = new User(user);
         updated.setEmail("update@gmail.com");
@@ -32,6 +38,17 @@ public class UserTestData {
         updated.setPassword("newPass");
         updated.setEnabled(false);
         updated.setRoles(Collections.singletonList(Role.ADMIN));
+        return updated;
+    }
+
+    public static User getUpdatedTwoRoles() {
+        User updated = new User(user);
+        updated.setEmail("update@gmail.com");
+        updated.setName("UpdatedName");
+        updated.setCaloriesPerDay(330);
+        updated.setPassword("newPass");
+        updated.setEnabled(false);
+        updated.setRoles(Set.of(Role.USER, Role.ADMIN));
         return updated;
     }
 }
