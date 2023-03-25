@@ -28,7 +28,7 @@
 
 #### filter Meals
 
-`curl -s http://localhost:8080/topjava/rest/meals/between?startDateTime=2020-01-30T10:00&endDateTime=2020-01-30T14:00:00`
+`curl -s http://localhost:8080/topjava/rest/meals/between?startDate=2020-01-30&startTime=10:00&endDate=2020-01-30&endTime=14:00:00`
 
 #### create Meal
 
