@@ -38,7 +38,7 @@ class AdminRestControllerTest extends AbstractControllerTest {
 
     @Test
     void getWithMeals() throws Exception {
-        assumeTrue(isDataJpa(), "Validation not supported (DataJPA only)");
+        assumeTrue(isDataJpa(), "Profile not supported (DataJPA only)");
         perform(MockMvcRequestBuilders.get(REST_URL + ADMIN_ID + "/with-meals"))
                 .andExpect(status().isOk())
                 .andDo(print())

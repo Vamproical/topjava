@@ -17,8 +17,8 @@ import static org.assertj.core.api.Assertions.assertThat;
  * Support converting json MvcResult to objects for comparation.
  */
 public class MatcherFactory {
-    public static <T> Matcher<T> newMatcher(Class<T> clazz) {
-        return new Matcher<>(clazz, "");
+    public static <T> Matcher<T> usingFieldByFieldComparator(Class<T> clazz) {
+        return new Matcher<>(clazz);
     }
 
     public static <T> Matcher<T> usingIgnoringFieldsComparator(Class<T> clazz, String... fieldsToIgnore) {
