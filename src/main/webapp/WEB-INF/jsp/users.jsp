@@ -11,7 +11,7 @@
 <script src="resources/js/topjava.users.js" defer></script>
 <jsp:include page="fragments/bodyHeader.jsp"/>
 
-webjars<div class="jumbotron pt-4">
+<div class="jumbotron pt-4">
     <div class="container">
         <h3 class="text-center"><spring:message code="user.title"/></h3>
         <button class="btn btn-primary" onclick="add()">
