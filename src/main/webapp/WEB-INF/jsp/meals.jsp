@@ -42,7 +42,7 @@
                     <span class="fa fa-remove"></span>
                     <spring:message code="common.cancel"/>
                 </button>
-                <button class="btn btn-primary" onclick="updateTable()">
+                <button class="btn btn-primary" onclick="updateTableData()">
                     <span class="fa fa-filter"></span>
                     <spring:message code="meal.filter"/>
                 </button>
@@ -66,7 +66,7 @@
             </thead>
             <c:forEach items="${requestScope.meals}" var="meal">
                 <jsp:useBean id="meal" type="ru.javawebinar.topjava.to.MealTo"/>
-                <tr data-meal-excess="${meal.excess}">
+                <tr data-meal-excess="${meal.excess}" id="${meal.id}">
                     <td>
                             ${fn:formatDateTime(meal.dateTime)}
                     </td>
