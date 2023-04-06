@@ -14,10 +14,10 @@ public class MealTo extends BaseTo {
     private final LocalDateTime dateTime;
 
     @NotBlank
-    @Size(min = 2, max = 120)
+    @Size(min = 2, max = 120, message = "description must be between 2 and 120 characters")
     private final String description;
 
-    @Range(min = 10, max = 5000)
+    @Range(min = 10, max = 5000, message = "calories must be between 10 and 5000")
     @NotNull
     private final int calories;
 
