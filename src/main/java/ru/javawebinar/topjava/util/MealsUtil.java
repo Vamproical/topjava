@@ -40,15 +40,4 @@ public class MealsUtil {
     public static MealTo createTo(Meal meal, boolean excess) {
         return new MealTo(meal.getId(), meal.getDateTime(), meal.getDescription(), meal.getCalories(), excess);
     }
-
-    public static Meal createNewFromTo(MealTo to) {
-        return new Meal(null, to.getDateTime(), to.getDescription(), to.getCalories());
-    }
-
-    public static Meal updateFromTo(Meal meal, MealTo mealTo) {
-        meal.setDateTime(mealTo.getDateTime());
-        meal.setDescription(mealTo.getDescription());
-        meal.setCalories(mealTo.getCalories());
-        return meal;
-    }
 }

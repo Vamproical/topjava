@@ -6,6 +6,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.lang.Nullable;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
+import ru.javawebinar.topjava.model.Meal;
 import ru.javawebinar.topjava.to.MealTo;
 
 import javax.validation.Valid;
@@ -31,19 +32,25 @@ public class MealUIController extends AbstractMealController {
         super.delete(id);
     }
 
+    @Override
+    @GetMapping(value = "/{id}")
+    public Meal get(@PathVariable int id) {
+        return super.get(id);
+    }
+
     @PostMapping
     @ResponseStatus(HttpStatus.NO_CONTENT)
-    public ResponseEntity<String> create(@Valid MealTo mealTo, BindingResult result) {
+    public ResponseEntity<String> createOrUpdate(@Valid Meal meal, BindingResult result) {
         if (result.hasErrors()) {
             String errorFieldsMsg = result.getFieldErrors().stream()
                     .map(fe -> String.format("[%s] %s", fe.getField(), fe.getDefaultMessage()))
                     .collect(Collectors.joining("<br>"));
             return ResponseEntity.unprocessableEntity().body(errorFieldsMsg);
         }
-        if (mealTo.isNew()) {
-            super.create(mealTo);
+        if (meal.isNew()) {
+            super.create(meal);
         } else {
-            super.update(mealTo, mealTo.id());
+            super.update(meal, meal.id());
         }
         return ResponseEntity.ok().build();
     }
