@@ -1,24 +1,14 @@
 package ru.javawebinar.topjava.to;
 
-import org.hibernate.validator.constraints.Range;
-
-import javax.validation.constraints.NotBlank;
-import javax.validation.constraints.NotNull;
-import javax.validation.constraints.Size;
 import java.beans.ConstructorProperties;
 import java.time.LocalDateTime;
 import java.util.Objects;
 
 public class MealTo extends BaseTo {
-    @NotNull
     private final LocalDateTime dateTime;
 
-    @NotBlank
-    @Size(min = 2, max = 120, message = "description must be between 2 and 120 characters")
     private final String description;
 
-    @Range(min = 10, max = 5000, message = "calories must be between 10 and 5000")
-    @NotNull
     private final int calories;
 
     private final boolean excess;
