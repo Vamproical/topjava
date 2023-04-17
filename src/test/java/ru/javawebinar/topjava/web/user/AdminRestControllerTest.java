@@ -3,16 +3,19 @@ package ru.javawebinar.topjava.web.user;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
+import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.test.web.servlet.ResultActions;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
-import ru.javawebinar.topjava.UserTestData;
+import ru.javawebinar.topjava.model.Role;
 import ru.javawebinar.topjava.model.User;
 import ru.javawebinar.topjava.service.UserService;
+import ru.javawebinar.topjava.util.exception.ErrorInfo;
+import ru.javawebinar.topjava.util.exception.ErrorType;
 import ru.javawebinar.topjava.util.exception.NotFoundException;
 import ru.javawebinar.topjava.web.AbstractControllerTest;
+import ru.javawebinar.topjava.web.json.JsonUtil;
 
-import static org.junit.jupiter.api.Assertions.assertFalse;
-import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
@@ -97,6 +100,25 @@ class AdminRestControllerTest extends AbstractControllerTest {
     }
 
     @Test
+    void updateWithInvalidField() throws Exception {
+        User updated = getUpdated();
+        updated.setEmail("");
+        ErrorInfo info = new ErrorInfo("http://localhost/rest/admin/users/100000",
+                ErrorType.VALIDATION_ERROR,
+                "[email] must not be blank");
+
+        MvcResult action = perform(MockMvcRequestBuilders.put(REST_URL + USER_ID)
+                .contentType(MediaType.APPLICATION_JSON)
+                .with(userHttpBasic(admin))
+                .content(jsonWithPassword(updated, updated.getPassword())))
+                .andExpect(status().isUnprocessableEntity())
+                .andReturn();
+
+        ErrorInfo result = JsonUtil.readValue(action.getResponse().getContentAsString(), ErrorInfo.class);
+        assertEquals(info, result);
+    }
+
+    @Test
     void createWithLocation() throws Exception {
         User newUser = getNew();
         ResultActions action = perform(MockMvcRequestBuilders.post(REST_URL)
@@ -110,6 +132,29 @@ class AdminRestControllerTest extends AbstractControllerTest {
         newUser.setId(newId);
         USER_MATCHER.assertMatch(created, newUser);
         USER_MATCHER.assertMatch(userService.get(newId), newUser);
+    }
+
+    @Test
+    void createWithInvalidField() throws Exception {
+        User newUser = new User(null, "", "", "", 0, Role.USER);
+        ErrorInfo info = new ErrorInfo("http://localhost/rest/admin/users/",
+                ErrorType.VALIDATION_ERROR,
+                "[password] size must be between 5 and 128",
+                "[name] must not be blank",
+                "[caloriesPerDay] must be between 10 and 10000",
+                "[name] size must be between 2 and 128",
+                "[email] must not be blank",
+                "[password] must not be blank");
+
+        MvcResult action = perform(MockMvcRequestBuilders.post(REST_URL)
+                .contentType(MediaType.APPLICATION_JSON)
+                .with(userHttpBasic(admin))
+                .content(jsonWithPassword(newUser, newUser.getPassword())))
+                .andExpect(status().isUnprocessableEntity())
+                .andReturn();
+
+        ErrorInfo result = JsonUtil.readValue(action.getResponse().getContentAsString(), ErrorInfo.class);
+        assertEquals(info, result);
     }
 
     @Test
