@@ -2,7 +2,6 @@ package ru.javawebinar.topjava.web;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.context.MessageSource;
 import org.springframework.context.support.MessageSourceAccessor;
 import org.springframework.core.Ordered;
 import org.springframework.core.annotation.Order;
@@ -34,14 +33,13 @@ public class ExceptionInfoHandler {
     public static final String EXCEPTION_DUPLICATE_DATETIME = "exception.meal.duplicateDateTime";
     private final MessageSourceAccessor messageSourceAccessor;
 
-    public ExceptionInfoHandler(MessageSource messageSource) {
-        this.messageSourceAccessor = new MessageSourceAccessor(messageSource);
-    }
-
     private static final Map<String, String> CONSTRAINS_I18N_MAP = Map.of(
             "users_unique_email_idx", EXCEPTION_DUPLICATE_EMAIL,
             "meal_unique_user_datetime_idx", EXCEPTION_DUPLICATE_DATETIME);
 
+    public ExceptionInfoHandler(MessageSourceAccessor accessor) {
+        this.messageSourceAccessor = accessor;
+    }
 
     //  http://stackoverflow.com/a/22358422/548473
     @ResponseStatus(HttpStatus.UNPROCESSABLE_ENTITY)

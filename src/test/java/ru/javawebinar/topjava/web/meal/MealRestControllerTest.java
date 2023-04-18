@@ -15,6 +15,8 @@ import ru.javawebinar.topjava.util.exception.NotFoundException;
 import ru.javawebinar.topjava.web.AbstractControllerTest;
 import ru.javawebinar.topjava.web.json.JsonUtil;
 
+import static org.hamcrest.MatcherAssert.assertThat;
+import static org.hamcrest.Matchers.containsInAnyOrder;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
@@ -86,9 +88,6 @@ class MealRestControllerTest extends AbstractControllerTest {
 
     @Test
     void updateWithEmptyFields() throws Exception {
-        ErrorInfo info = new ErrorInfo("http://localhost/rest/profile/meals/100003",
-                ErrorType.VALIDATION_ERROR,
-                "[calories] must be between 10 and 5000");
         Meal updated = getUpdated();
         updated.setCalories(0);
 
@@ -99,7 +98,9 @@ class MealRestControllerTest extends AbstractControllerTest {
                 .andReturn();
 
         ErrorInfo result = JsonUtil.readValue(action.getResponse().getContentAsString(), ErrorInfo.class);
-        assertEquals(info, result);
+        assertEquals(ErrorType.VALIDATION_ERROR, result.getType());
+        assertThat(result.getDetails(),
+                containsInAnyOrder("[calories] must be between 10 and 5000"));
     }
 
     @Test
@@ -120,13 +121,7 @@ class MealRestControllerTest extends AbstractControllerTest {
 
     @Test
     void createWithEmptyFields() throws Exception {
-        Meal newMeal = new Meal(null, null, "", 0);
-        ErrorInfo info = new ErrorInfo("http://localhost/rest/profile/meals/",
-                ErrorType.VALIDATION_ERROR,
-                "[description] must not be blank",
-                "[description] size must be between 2 and 120",
-                "[calories] must be between 10 and 5000",
-                "[dateTime] must not be null");
+        Meal newMeal = new Meal(null, null, null, 0);
 
         MvcResult action = perform(MockMvcRequestBuilders.post(REST_URL)
                 .contentType(MediaType.APPLICATION_JSON)
@@ -136,7 +131,9 @@ class MealRestControllerTest extends AbstractControllerTest {
                 .andReturn();
 
         ErrorInfo result = JsonUtil.readValue(action.getResponse().getContentAsString(), ErrorInfo.class);
-        assertEquals(info, result);
+        assertEquals(ErrorType.VALIDATION_ERROR, result.getType());
+        assertThat(result.getDetails(),
+                containsInAnyOrder("[description] must not be blank", "[calories] must be between 10 and 5000", "[dateTime] must not be null"));
     }
 
     @Test

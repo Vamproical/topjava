@@ -29,6 +29,18 @@ public class ErrorInfo {
         this.details = details;
     }
 
+    public String getUrl() {
+        return url;
+    }
+
+    public ErrorType getType() {
+        return type;
+    }
+
+    public List<String> getDetails() {
+        return details;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
