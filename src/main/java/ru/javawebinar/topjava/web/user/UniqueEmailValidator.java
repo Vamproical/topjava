@@ -36,8 +36,8 @@ public class UniqueEmailValidator extends CustomValidatorBean {
             id = ((UserTo) target).getId();
         }
 
+        if (email == null || email.isEmpty()) return;
         User checkUser = userRepository.getByEmail(email);
-        if (id != null && checkUser != null && Objects.equals(checkUser.getId(), id)) return;
         if (checkUser != null && !Objects.equals(checkUser.getId(), id)) {
             errors.rejectValue("email", ExceptionInfoHandler.EXCEPTION_DUPLICATE_EMAIL);
         }

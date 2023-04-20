@@ -73,7 +73,10 @@ public class ExceptionInfoHandler {
     @ExceptionHandler(BindException.class)
     public ErrorInfo validationBindError(HttpServletRequest req, BindException e) {
         String[] list = e.getFieldErrors().stream()
-                .map(fe -> String.format("[%s] %s", fe.getField(), fe.getDefaultMessage()))
+                .map(fe -> {
+                    String field = fe.getField();
+                    return String.format("[%s] %s", field, field.equals("email") ? messageSourceAccessor.getMessage(EXCEPTION_DUPLICATE_EMAIL) : fe.getDefaultMessage());
+                })
                 .toArray(String[]::new);
 
         return logAndGetErrorInfo(req, e, false, VALIDATION_ERROR, list);
